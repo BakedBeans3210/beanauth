@@ -70,6 +70,3 @@ def get_app_value():
 
     value = doc.to_dict().get(app, {}).get(key, None)
     return jsonify({"app": app, "key": key, "value": value})
-
-if __name__ == "__main__":
-    app.run(debug=True)
