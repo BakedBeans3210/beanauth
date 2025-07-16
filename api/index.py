@@ -2,9 +2,12 @@ from flask import Flask, request, jsonify
 import firebase_admin
 from firebase_admin import credentials, firestore
 from datetime import datetime
+import json
+import os
 
-# 🔐 Firebase initialization
-cred = credentials.Certificate("serviceAccount.json")  # Replace with your Firebase admin credentials
+cred_json = json.loads(os.environ["FIREBASE_CREDENTIALS"])
+cred = credentials.Certificate(cred_json)
+
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
