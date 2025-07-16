@@ -1,16 +1,20 @@
-from flask import Flask, request, jsonify
-import firebase_admin
-from firebase_admin import credentials, firestore
-from datetime import datetime
-import json
 import os
+import json
+from flask import Flask, request, jsonify
+from firebase_admin import credentials, firestore, initialize_app
+from datetime import datetime
 
-cred_json_str = os.environ["FIREBASE_CREDENTIALS"]
-# Convert \\n to \n so it becomes a valid PEM
-fixed_json_str = cred_json_str.replace('\\n', '\n')
-cred_json = json.loads(fixed_json_str)
+# 🔐 Load and fix Firebase credentials from Vercel env variable
+raw_json = os.environ["FIREBASE_CREDENTIALS"]
+safe_json = raw_json.replace('\\n', '\n')  # Reconvert escaped newlines
+cred_json = json.loads(safe_json)
+
+# 🔑 Initialize Firebase Admin SDK
 cred = credentials.Certificate(cred_json)
+initialize_app(cred)
+db = firestore.client()
 
+# 🛡️ Setup Flask
 app = Flask(__name__)
 
 # 🚪 Create or login to user account
