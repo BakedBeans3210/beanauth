@@ -5,11 +5,11 @@ from datetime import datetime
 import json
 import os
 
-cred_json = json.loads(os.environ["FIREBASE_CREDENTIALS"])
+cred_json_str = os.environ["FIREBASE_CREDENTIALS"]
+# Convert \\n to \n so it becomes a valid PEM
+fixed_json_str = cred_json_str.replace('\\n', '\n')
+cred_json = json.loads(fixed_json_str)
 cred = credentials.Certificate(cred_json)
-
-firebase_admin.initialize_app(cred)
-db = firestore.client()
 
 app = Flask(__name__)
 
